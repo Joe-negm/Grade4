@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cambridge Stage 4 Math Worksheet Generator</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #4a6ee0;
+            padding-bottom: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #7f8c8d;
+            transition: all 0.3s;
+        }
+        .tab.active {
+            color: #4a6ee0;
+            border-bottom: 3px solid #4a6ee0;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .control-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        select, input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        button {
+            background-color: #4a6ee0;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #3a5bc7;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .worksheet {
+            margin-top: 30px;
+            padding: 30px;
+            border: 1px solid #e1e4e8;
+            border-radius: 8px;
+            background-color: white;
+        }
+        .question {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #e1e4e8;
+        }
+        .question-number {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #4a6ee0;
+        }
+        .question-text {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        .options {
+            margin-left: 20px;
+        }
+        .option {
+            margin-bottom: 8px;
+        }
+        .answer-input {
+            width: 200px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
+        .unit-header {
+            background-color: #e8edff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 30px 0 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            border-left: 5px solid #4a6ee0;
+        }
+        .hidden {
+            display: none;
+        }
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        #printBtn {
+            background-color: #27ae60;
+        }
+        #printBtn:hover {
+            background-color: #219653;
+        }
+        #checkAnswersBtn {
+            background-color: #e67e22;
+        }
+        #checkAnswersBtn:hover {
+            background-color: #d35400;
+        }
+        #viewScoresBtn {
+            background-color: #9b59b6;
+        }
+        #viewScoresBtn:hover {
+            background-color: #8e44ad;
+        }
+        #downloadBtn {
+            background-color: #3498db;
+        }
+        #downloadBtn:hover {
+            background-color: #2980b9;
+        }
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        .feedback {
+            margin-top: 10px;
+            padding: 8px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        .correct {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .score-display {
+            text-align: center;
+            font-size: 1.2rem;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #e8f4fd;
+            border-radius: 8px;
+            border: 1px solid #b8daff;
+        }
+        .scores-container {
+            margin-top: 20px;
+        }
+        .score-card {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #4a6ee0;
+        }
+        .score-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .score-topic {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .score-date {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        .score-details {
+            display: flex;
+            justify-content: space-between;
+        }
+        .score-value {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #4a6ee0;
+        }
+        .no-scores {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        .user-info {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .user-input {
+            flex: 1;
+        }
+        .error-message {
+            color: #e74c3c;
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+        
+        /* Image styles */
+        .question-image {
+            max-width: 100%;
+            height: auto;
+            margin: 15px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .number-line {
+            width: 100%;
+            max-width: 500px;
+            height: 60px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            position: relative;
+            margin: 15px 0;
+        }
+        
+        .number-line-mark {
+            position: absolute;
+            bottom: 0;
+            width: 1px;
+            height: 20px;
+            background-color: #333;
+        }
+        
+        .number-line-label {
+            position: absolute;
+            bottom: -25px;
+            text-align: center;
+            width: 30px;
+            left: -15px;
+        }
+        
+        .grid-coordinates {
+            width: 300px;
+            height: 300px;
+            background-color: #f8f9fa;
+            border: 1px solid #333;
+            position: relative;
+            margin: 15px 0;
+        }
+        
+        .grid-line {
+            position: absolute;
+            background-color: #ddd;
+        }
+        
+        .grid-line.vertical {
+            width: 1px;
+            height: 100%;
+        }
+        
+        .grid-line.horizontal {
+            width: 100%;
+            height: 1px;
+        }
+        
+        .grid-point {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: #4a6ee0;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .grid-label {
+            position: absolute;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .grid-label.x-axis {
+            bottom: -20px;
+        }
+        
+        .grid-label.y-axis {
+            left: -20px;
+        }
+        
+        .shape-diagram {
+            width: 150px;
+            height: 150px;
+            margin: 15px 0;
+            border: 1px solid #333;
+        }
+        
+        .fraction-diagram {
+            width: 200px;
+            height: 100px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            position: relative;
+            margin: 15px 0;
+            display: flex;
+        }
+        
+        .fraction-part {
+            flex: 1;
+            border-right: 1px solid #ddd;
+        }
+        
+        .fraction-part:last-child {
+            border-right: none;
+        }
+        
+        @media print {
+            .controls, .actions, footer, .feedback, .score-display, .tabs {
+                display: none;
+            }
+            .worksheet {
+                border: none;
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Cambridge Stage 4 Math Worksheet Generator</h1>
+            <p class="subtitle">Based on Cambridge Primary Progression Tests (2014-2023)</p>
+        </header>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="worksheet">Worksheet</div>
+            <div class="tab" data-tab="scores">Score History</div>
+        </div>
+        
+        <div class="tab-content active" id="worksheet-tab">
+            <div class="user-info">
+                <div class="user-input">
+                    <label for="userName">Student Name:</label>
+                    <input type="text" id="userName" placeholder="Enter your name" required>
+                    <div class="error-message hidden" id="nameError">Please enter your name to generate the worksheet.</div>
+                </div>
+                <div class="user-input">
+                    <label for="userId">Student ID (optional):</label>
+                    <input type="text" id="userId" placeholder="Enter student ID">
+                </div>
+            </div>
+            
+            <div class="controls">
+                <div class="control-group">
+                    <label for="topic">Select Topic:</label>
+                    <select id="topic">
+                        <option value="all">All Topics</option>
+                        <option value="number">Number & Place Value</option>
+                        <option value="sequences">Sequences & Patterns</option>
+                        <option value="fractions">Fractions</option>
+                        <option value="geometry">Geometry & Shapes</option>
+                        <option value="measurement">Measurement</option>
+                        <option value="statistics">Statistics & Probability</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label for="difficulty">Difficulty Level:</label>
+                    <select id="difficulty">
+                        <option value="all">All Levels</option>
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label for="questionCount">Number of Questions:</label>
+                    <input type="number" id="questionCount" min="5" max="50" value="20">
+                </div>
+                
+                <div class="control-group">
+                    <label for="year">Test Year:</label>
+                    <select id="year">
+                        <option value="all">All Years</option>
+                        <option value="2014">2014</option>
+                        <option value="2018">2018</option>
+                        <option value="2020">2020</option>
+                        <option value="2022">2022</option>
+                        <option value="2023">2023</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <button id="generateBtn">Generate Worksheet</button>
+                </div>
+            </div>
+            
+            <div class="worksheet hidden" id="worksheet">
+                <!-- Worksheet content will be generated here -->
+            </div>
+            
+            <div class="score-display hidden" id="scoreDisplay">
+                <!-- Score will be displayed here -->
+            </div>
+            
+            <div class="actions">
+                <button id="checkAnswersBtn" class="hidden">Check Answers</button>
+                <button id="downloadBtn" class="hidden">Download Worksheet</button>
+                <button id="printBtn" class="hidden">Print Worksheet</button>
+                <button id="viewScoresBtn">View Score History</button>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="scores-tab">
+            <h2>Score History</h2>
+            <div class="scores-container" id="scoresContainer">
+                <!-- Score history will be displayed here -->
+            </div>
+        </div>
+        
+        <footer>
+            <p>Cambridge Stage 4 Math Worksheet Generator &copy; 2025</p>
+        </footer>
+    </div>
+
+    <script>
+        // Backend simulation using localStorage
+        class ScoreTracker {
+            constructor() {
+                this.storageKey = 'mathWorksheetScores';
+                this.scores = this.loadScores();
+            }
+            
+            loadScores() {
+                const stored = localStorage.getItem(this.storageKey);
+                return stored ? JSON.parse(stored) : [];
+            }
+            
+            saveScores() {
+                localStorage.setItem(this.storageKey, JSON.stringify(this.scores));
+            }
+            
+            addScore(scoreData) {
+                const score = {
+                    id: Date.now().toString(),
+                    date: new Date().toISOString(),
+                    ...scoreData
+                };
+                
+                this.scores.unshift(score);
+                this.saveScores();
+                return score;
+            }
+            
+            getScores() {
+                return this.scores;
+            }
+            
+            getScoresByUser(userId) {
+                return this.scores.filter(score => score.userId === userId);
+            }
+            
+            getScoresByTopic(topic) {
+                return this.scores.filter(score => score.topic === topic);
+            }
+            
+            clearScores() {
+                this.scores = [];
+                this.saveScores();
+            }
+        }
+
+        // Question bank based on Cambridge Stage 4 curriculum (2014-2023)
+        const questionBank = {
+            number: [
+                {
+                    type: "short-answer",
+                    question: "Write the number seven thousand, four hundred and two in digits.",
+                    answer: "7402",
+                    explanation: "Seven thousand = 7000, four hundred = 400, and two = 2, so 7000 + 400 + 2 = 7402.",
+                    year: "2014"
+                },
+                {
+                    type: "short-answer",
+                    question: "Draw a ring around the number that is not a multiple of 4: 16, 26, 32, 48",
+                    answer: "26",
+                    explanation: "26 is not a multiple of 4 because 26 ÷ 4 = 6.5 (not a whole number).",
+                    year: "2014"
+                },
+                {
+                    type: "short-answer",
+                    question: "Calculate: 70 × 4",
+                    answer: "280",
+                    explanation: "7 × 4 = 28, then add a zero: 70 × 4 = 280.",
+                    year: "2014"
+                },
+                {
+                    type: "short-answer",
+                    question: "Calculate: 634 – 219",
+                    answer: "415",
+                    explanation: "634 - 219 = 415.",
+                    year: "2014"
+                },
+                {
+                    type: "short-answer",
+                    question: "A model van is one tenth of the size of the real van. The model measures 42 cm. How long is the real van?",
+                    answer: "420 cm",
+                    explanation: "If model is 1/10 of real size, then real van is 10 × 42 cm = 420 cm.",
+                    year: "2014"
+                },
+                {
+                    type: "short-answer",
+                    question: "Write six thousand and nine in figures.",
+                    answer: "6009",
+                    explanation: "Six thousand = 6000, and nine = 9, so 6009.",
+                    year: "2022"
+                },
+                {
+                    type: "short-answer",
+                    question: "Write a number between 260 and 290 that is divisible by 25",
+                    answer: "275",
+                    explanation: "275 is between 260 and 290 and divisible by 25 (275 ÷ 25 = 11).",
+                    year: "2022"
+                },
+                {
+                    type: "short-answer",
+                    question: "What does the digit 3 represent in the number 13645?",
+                    answer: "3000",
+                    explanation: "In 13645, the 3 is in the thousands place, so it represents 3000.",
+                    year: "2022"
+                },
+                {
+                    type: "short-answer",
+                    question: "Double 65",
+                    answer: "130",
+                    explanation: "65 × 2 = 130.",
+                    year: "2014"
+                },
+                {
+                    type: "short-answer",
+                    question: "Draw a ring around all the multiples of 5: 125, 311, 351, 560, 655",
+                    answer: "125, 560, 655",
+                    explanation: "Multiples of 5 end with 0 or 5, so 125, 560, and 655 are multiples of 5.",
+                    year: "2014"
+                },
+                {
+                    type: "short-answer",
+                    question: "Calculate: 256 + 324",
+                    answer: "580",
+                    explanation: "256 + 324 = 580.",
+                    year: "2014"
+                },
+                {
+                    type: "short-answer",
+                    question: "Anton has 327 ice creams in his shop. He sells 69 ice creams. How many does he have left?",
+                    answer: "258",
+                    explanation: "327 - 69 = 258.",
+                    year: "2014"
+                },
+                {
+                    type: "short-answer",
+                    question: "Write these numbers in the correct place on the sorting diagram: 9, 14, 19, 24",
+                    answer: "Multiples of 3: 9, 24; Not multiples of 3: 14, 19; Odd numbers: 9, 19; Even numbers: 14, 24",
+                    explanation: "9 and 24 are multiples of 3, 14 and 19 are not. 9 and 19 are odd, 14 and 24 are even.",
+                    year: "2014"
+                },
+                {
+                    type: "short-answer",
+                    question: "Write the length of a classroom as a decimal: five and a half metres",
+                    answer: "5.5 m",
+                    explanation: "Five and a half = 5.5.",
+                    year: "2014"
+                }
+            ],
+            sequences: [
+                {
+                    type: "short-answer",
+                    question: "Here is a sequence: 83, 75, 67. What is the next number?",
+                    answer: "59",
+                    explanation: "The sequence decreases by 8 each time: 83-8=75, 75-8=67, so 67-8=59.",
+                    year: "2018"
+                },
+                {
+                    type: "short-answer",
+                    question: "Here is part of a sequence: 34, 24, 14. What are the next two terms?",
+                    answer: "4, -6",
+                    explanation: "The sequence decreases by 10 each time: 34-10=24, 24-10=14, so 14-10=4, and 4-10=-6.",
+                    year: "2022"
+                },
+                {
+                    type: "short-answer",
+                    question: "Complete the sequence: 1, 6, 11, 16, ...",
+                    answer: "21",
+                    explanation: "The sequence increases by 5 each time: 1+5=6, 6+5=11, 11+5=16, so 16+5=21.",
+                    year: "2014"
+                },
+                {
+                    type: "short-answer",
+                    question: "Here is part of a sequence: 78, 69, 60. What are the next two terms?",
+                    answer: "51, 42",
+                    explanation: "The sequence decreases by 9 each time: 78-9=69, 69-9=60, so 60-9=51, and 51-9=42.",
+                    year: "2020"
+                },
+                {
+                    type: "short-answer",
+                    question: "Here is a pattern made with dots. The pattern continues in the same way. Diagram 1 has 3 dots, Diagram 2 has 5 dots, Diagram 3 has 7 dots. How many dots in Diagram 9?",
+                    answer: "19",
+                    explanation: "The pattern increases by 2 dots each time: Diagram n has 2n+1 dots. So Diagram 9 has 2×9+1=19 dots.",
+                    year: "2023"
+                },
+                {
+                    type: "short-answer",
+                    question: "Here is part of a sequence: 307, 207, 107. What are the next two terms?",
+                    answer: "7, -93",
+                    explanation: "The sequence decreases by 100 each time: 307-100=207, 207-100=107, so 107-100=7, and 7-100=-93.",
+                    year: "2023"
+                }
+            ],
+            fractions: [
+                {
+                    type: "short-answer",
+                    question: "Put these fractions in order, starting with the smallest: 3/10, 8/10, 5/10, 1/10",
+                    answer: "1/10, 3/10, 5/10, 8/10",
+                    explanation: "With the same denominator, compare numerators: 1/10 < 3/10 < 5/10 < 8/10.",
+                    year: "2014"
+                },
+                {
+                    type: "short-answer",
+                    question: "Complete this calculation: 3/4 + ? = 1",
+                    answer: "1/4",
+                    explanation: "1 = 4/4, and 3/4 + 1/4 = 4/4 = 1.",
+                    year: "2014"
+                },
+                {
+                    type: "short-answer",
+                    question: "Write 90/100 as a decimal",
+                    answer: "0.9",
+                    explanation: "90/100 = 0.9",
+                    year: "2014"
+                },
+                {
+                    type: "short-answer",
+                    question: "Write a number in the box to make the statement correct: 3/5 < □ < 9/10",
+                    answer: "4/5",
+                    explanation: "3/5 = 0.6, 9/10 = 0.9, and 4/5 = 0.8 which is between 0.6 and 0.9.",
+                    year: "2020"
+                },
+                {
+                    type: "short-answer",
+                    question: "Write a number in each box to make the equivalent fractions correct: 1/2 = □/16, 3/4 = □/18",
+                    answer: "8, 13.5",
+                    explanation: "1/2 = 8/16 (multiply numerator and denominator by 8), 3/4 = 13.5/18 (3×18÷4=13.5).",
+                    year: "2022"
+                },
+                {
+                    type: "short-answer",
+                    question: "Complete the table of equivalent fractions and percentages: 50%, 1%, 3/4",
+                    answer: "1/2, 1/100, 75%",
+                    explanation: "50% = 1/2, 1% = 1/100, 3/4 = 75%.",
+                    year: "2022"
+                },
+                {
+                    type: "short-answer",
+                    question: "Write the missing fractions: 1/3 + ... = 1, 3/5 + ... = 1",
+                    answer: "2/3, 2/5",
+                    explanation: "1 = 3/3, so 1/3 + 2/3 = 1. 1 = 5/5, so 3/5 + 2/5 = 1.",
+                    year: "2018"
+                }
+            ],
+            geometry: [
+                {
+                    type: "short-answer",
+                    question: "Tick (✓) the flags that have at least one line of symmetry.",
+                    answer: "Flags with symmetrical designs",
+                    explanation: "Flags with symmetrical designs have at least one line of symmetry.",
+                    year: "2014"
+                },
+                {
+                    type: "short-answer",
+                    question: "Draw all the lines of symmetry on these shapes.",
+                    answer: "Rectangle: 2 lines, Square: 4 lines, Triangle: 1 line",
+                    explanation: "A rectangle has 2 lines of symmetry, a square has 4, and an isosceles triangle has 1.",
+                    year: "2014"
+                },
+                {
+                    type: "short-answer",
+                    question: "Complete the net of the triangular prism.",
+                    answer: "A net with 2 triangles and 3 rectangles",
+                    explanation: "A triangular prism has 2 triangular faces and 3 rectangular faces.",
+                    year: "2014"
+                },
+                {
+                    type: "short-answer",
+                    question: "Draw a ring around the net of a cube.",
+                    answer: "A net with 6 squares",
+                    explanation: "A cube has a net made of 6 squares.",
+                    year: "2018"
+                },
+                {
+                    type: "short-answer",
+                    question: "Write the number of lines of symmetry for each shape: rectangle, regular pentagon, parallelogram, regular octagon, square",
+                    answer: "2, 5, 0, 8, 4",
+                    explanation: "Rectangle: 2, regular pentagon: 5, parallelogram: 0, regular octagon: 8, square: 4.",
+                    year: "2022"
+                },
+                {
+                    type: "short-answer",
+                    question: "Write the number of lines of symmetry for each shape: circle, equilateral triangle, rhombus",
+                    answer: "Infinite, 3, 2",
+                    explanation: "A circle has infinite lines of symmetry, an equilateral triangle has 3, and a rhombus has 2.",
+                    year: "2023"
+                },
+                {
+                    type: "short-answer",
+                    question: "Draw the reflection of the shape in the mirror line.",
+                    answer: "Mirrored image",
+                    explanation: "The reflection should be a mirror image across the given line.",
+                    year: "2020"
+                }
+            ],
+            measurement: [
+                {
+                    type: "short-answer",
+                    question: "Approximate the time taken for each event: Watch a film, Run 100m, Eat lunch, Hold your breath",
+                    answer: "2 hours, 20 seconds, 30 minutes, 90 seconds",
+                    explanation: "A film is typically 2 hours, running 100m takes about 20 seconds, eating lunch takes about 30 minutes, and holding breath is about 90 seconds.",
+                    year: "2014"
+                },
+                {
+                    type: "short-answer",
+                    question: "A young giraffe is 180 cm tall. His mother is three times as tall. What is the height of the mother giraffe?",
+                    answer: "540 cm",
+                    explanation: "180 cm × 3 = 540 cm.",
+                    year: "2018"
+                },
+                {
+                    type: "short-answer",
+                    question: "Calculate the area of a rectangle with sides 5cm and 2cm",
+                    answer: "10 cm²",
+                    explanation: "Area of rectangle = length × width = 5 × 2 = 10 cm².",
+                    year: "2022"
+                },
+                {
+                    type: "short-answer",
+                    question: "What is the perimeter of a rectangle with sides 9m and 6m?",
+                    answer: "30 m",
+                    explanation: "Perimeter = 2 × (length + width) = 2 × (9 + 6) = 2 × 15 = 30 m.",
+                    year: "2022"
+                },
+                {
+                    type: "short-answer",
+                    question: "Write a number in each box to make the statements correct: 5 days = □ hours, 5 minutes = □ seconds, 5 years = □ months, 5 hours = □ minutes",
+                    answer: "120, 300, 60, 300",
+                    explanation: "5 days = 120 hours (5×24), 5 minutes = 300 seconds (5×60), 5 years = 60 months (5×12), 5 hours = 300 minutes (5×60).",
+                    year: "2023"
+                },
+                {
+                    type: "short-answer",
+                    question: "What temperature does the thermometer show? (Thermometer shows between 0°C and 10°C)",
+                    answer: "5°C",
+                    explanation: "The thermometer shows halfway between 0°C and 10°C, which is 5°C.",
+                    year: "2014"
+                },
+                {
+                    type: "short-answer",
+                    question: "Measure the perimeter of the rectangle. (Rectangle with sides approximately 4cm and 3cm)",
+                    answer: "14 cm",
+                    explanation: "Perimeter = 2 × (length + width) = 2 × (4 + 3) = 14 cm.",
+                    year: "2023"
+                }
+            ],
+            statistics: [
+                {
+                    type: "short-answer",
+                    question: "A café owner counted the number of customers each day for a week. Here are the results in a pictogram (□ = 10 people). How many people visited the café on Thursday?",
+                    answer: "40",
+                    explanation: "Count the number of symbols for Thursday and multiply by 10.",
+                    year: "2014"
+                },
+                {
+                    type: "short-answer",
+                    question: "The teacher asked Class 4a and Class 4b their favourite sports. Here are bar charts of the results. How many students in Class 4b chose swimming?",
+                    answer: "Read from the bar chart",
+                    explanation: "Read the value from the bar chart for Class 4b and swimming.",
+                    year: "2014"
+                },
+                {
+                    type: "short-answer",
+                    question: "Use < or > to make these statements correct: 326 □ 408, 1989 □ 1788, 2035 □ 2042",
+                    answer: "<, >, <",
+                    explanation: "326 < 408, 1989 > 1788, 2035 < 2042.",
+                    year: "2014"
+                },
+                {
+                    type: "short-answer",
+                    question: "Complete the Carroll diagram: | Cycle to school | Do not cycle to school | | Boys | | | | Not boys | | |",
+                    answer: "Boys: half in each, Not boys: all in 'Do not cycle'",
+                    explanation: "Half the boys cycle to school, no girls cycle to school.",
+                    year: "2018"
+                },
+                {
+                    type: "short-answer",
+                    question: "Oliver measured the temperature in a school playground each day for a week. Use the information to complete the table: It was the same temperature on Tuesday and Thursday. It was 13°C warmer on Monday than Friday. It was 24°C on Friday. It was 18°C cooler on Wednesday than Monday. It was 13°C warmer on Tuesday than Wednesday.",
+                    answer: "Monday: 37°C, Tuesday: 32°C, Wednesday: 19°C, Thursday: 32°C, Friday: 24°C",
+                    explanation: "Friday: 24°C, Monday: 24+13=37°C, Wednesday: 37-18=19°C, Tuesday: 19+13=32°C, Thursday: 32°C (same as Tuesday).",
+                    year: "2020"
+                },
+                {
+                    type: "short-answer",
+                    question: "Complete the tally chart and bar chart for favourite colours.",
+                    answer: "Complete based on given data",
+                    explanation: "Use the tally marks to complete the frequency table and then create the bar chart.",
+                    year: "2018"
+                }
+            ]
+        };
+
+        // DOM elements
+        const generateBtn = document.getElementById('generateBtn');
+        const printBtn = document.getElementById('printBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const checkAnswersBtn = document.getElementById('checkAnswersBtn');
+        const viewScoresBtn = document.getElementById('viewScoresBtn');
+        const worksheet = document.getElementById('worksheet');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const scoresContainer = document.getElementById('scoresContainer');
+        const topicSelect = document.getElementById('topic');
+        const difficultySelect = document.getElementById('difficulty');
+        const questionCountInput = document.getElementById('questionCount');
+        const yearSelect = document.getElementById('year');
+        const userNameInput = document.getElementById('userName');
+        const userIdInput = document.getElementById('userId');
+        const nameError = document.getElementById('nameError');
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        // Initialize score tracker
+        const scoreTracker = new ScoreTracker();
+
+        // Store current questions for answer checking
+        let currentQuestions = [];
+        let currentTopic = 'all';
+
+        // Tab switching
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabId = tab.getAttribute('data-tab');
+                
+                // Update active tab
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Show active tab content
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                    if (content.id === `${tabId}-tab`) {
+                        content.classList.add('active');
+                    }
+                });
+                
+                // If switching to scores tab, refresh the scores display
+                if (tabId === 'scores') {
+                    displayScores();
+                }
+            });
+        });
+
+        // Generate worksheet function
+        function generateWorksheet() {
+            const userName = userNameInput.value.trim();
+            
+            // Validate student name
+            if (!userName) {
+                nameError.classList.remove('hidden');
+                return;
+            }
+            
+            nameError.classList.add('hidden');
+            
+            const selectedTopic = topicSelect.value;
+            const questionCount = parseInt(questionCountInput.value);
+            const selectedYear = yearSelect.value;
+            currentTopic = selectedTopic;
+            
+            // Clear previous worksheet
+            worksheet.innerHTML = '';
+            scoreDisplay.innerHTML = '';
+            scoreDisplay.classList.add('hidden');
+            
+            // Select questions based on topic and year
+            let questions = [];
+            if (selectedTopic === 'all') {
+                // Combine questions from all topics
+                for (const topic in questionBank) {
+                    questions = questions.concat(questionBank[topic]);
+                }
+            } else {
+                questions = questionBank[selectedTopic];
+            }
+            
+            // Filter by year if specified
+            if (selectedYear !== 'all') {
+                questions = questions.filter(q => q.year === selectedYear);
+            }
+            
+            // Shuffle questions and select the requested number
+            const shuffledQuestions = shuffleArray([...questions]);
+            currentQuestions = shuffledQuestions.slice(0, Math.min(questionCount, shuffledQuestions.length));
+            
+            // Add unit headers if showing all topics
+            if (selectedTopic === 'all') {
+                addUnitHeaders(currentQuestions);
+            } else {
+                // Just add the questions
+                currentQuestions.forEach((q, index) => {
+                    addQuestionToWorksheet(q, index + 1);
+                });
+            }
+            
+            // Show worksheet and action buttons
+            worksheet.classList.remove('hidden');
+            printBtn.classList.remove('hidden');
+            downloadBtn.classList.remove('hidden');
+            checkAnswersBtn.classList.remove('hidden');
+        }
+
+        // Add unit headers for better organization when showing all topics
+        function addUnitHeaders(questions) {
+            let currentUnit = '';
+            let questionNumber = 1;
+            
+            questions.forEach(q => {
+                // Determine which unit this question belongs to
+                let unit = '';
+                if (questionBank.number.includes(q)) unit = 'Number & Place Value';
+                else if (questionBank.sequences.includes(q)) unit = 'Sequences & Patterns';
+                else if (questionBank.fractions.includes(q)) unit = 'Fractions';
+                else if (questionBank.geometry.includes(q)) unit = 'Geometry & Shapes';
+                else if (questionBank.measurement.includes(q)) unit = 'Measurement';
+                else if (questionBank.statistics.includes(q)) unit = 'Statistics & Probability';
+                
+                // Add unit header if it's different from the current one
+                if (unit && unit !== currentUnit) {
+                    const unitHeader = document.createElement('div');
+                    unitHeader.className = 'unit-header';
+                    unitHeader.textContent = unit;
+                    worksheet.appendChild(unitHeader);
+                    currentUnit = unit;
+                }
+                
+                // Add the question
+                addQuestionToWorksheet(q, questionNumber);
+                questionNumber++;
+            });
+        }
+
+        // Add a question to the worksheet
+        function addQuestionToWorksheet(question, number) {
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'question';
+            questionDiv.id = `question-${number}`;
+            
+            const questionNumber = document.createElement('div');
+            questionNumber.className = 'question-number';
+            questionNumber.textContent = `${number}. (${question.year})`;
+            questionDiv.appendChild(questionNumber);
+            
+            const questionText = document.createElement('div');
+            questionText.className = 'question-text';
+            questionText.innerHTML = question.question;
+            questionDiv.appendChild(questionText);
+            
+            // Add input for answer
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'answer-input';
+            input.placeholder = 'Your answer here...';
+            input.id = `answer-${number}`;
+            questionDiv.appendChild(input);
+            
+            // Add feedback area
+            const feedback = document.createElement('div');
+            feedback.className = 'feedback hidden';
+            feedback.id = `feedback-${number}`;
+            questionDiv.appendChild(feedback);
+            
+            worksheet.appendChild(questionDiv);
+        }
+
+        // Check answers function
+        function checkAnswers() {
+            let correctCount = 0;
+            
+            currentQuestions.forEach((question, index) => {
+                const questionNumber = index + 1;
+                const feedback = document.getElementById(`feedback-${questionNumber}`);
+                feedback.classList.remove('correct', 'incorrect', 'hidden');
+                
+                const userAnswer = document.getElementById(`answer-${questionNumber}`).value.trim();
+                
+                // Normalize answer for comparison
+                const normalizedUserAnswer = userAnswer.toLowerCase().replace(/\s+/g, '');
+                const normalizedCorrectAnswer = question.answer.toString().toLowerCase().replace(/\s+/g, '');
+                
+                const isCorrect = normalizedUserAnswer === normalizedCorrectAnswer;
+                
+                if (isCorrect) {
+                    feedback.textContent = `✓ Correct! ${question.explanation || ''}`;
+                    feedback.classList.add('correct');
+                    correctCount++;
+                } else {
+                    feedback.textContent = `✗ Incorrect. The correct answer is: ${question.answer}. ${question.explanation || ''}`;
+                    feedback.classList.add('incorrect');
+                }
+            });
+            
+            // Calculate score
+            const scorePercentage = Math.round((correctCount / currentQuestions.length) * 100);
+            
+            // Save score to backend
+            const userName = userNameInput.value || 'Anonymous';
+            const userId = userIdInput.value || 'unknown';
+            
+            const scoreData = {
+                userName: userName,
+                userId: userId,
+                topic: currentTopic,
+                score: scorePercentage,
+                correctAnswers: correctCount,
+                totalQuestions: currentQuestions.length,
+                date: new Date().toLocaleString()
+            };
+            
+            scoreTracker.addScore(scoreData);
+            
+            // Display score
+            scoreDisplay.innerHTML = `
+                <h3>Your Score: ${correctCount}/${currentQuestions.length} (${scorePercentage}%)</h3>
+                <p>${getScoreMessage(scorePercentage)}</p>
+                <p>Score saved to your history.</p>
+            `;
+            scoreDisplay.classList.remove('hidden');
+        }
+
+        // Download worksheet as text file
+        function downloadWorksheet() {
+            const userName = userNameInput.value.trim() || 'Student';
+            const topic = topicSelect.options[topicSelect.selectedIndex].text;
+            const date = new Date().toLocaleDateString();
+            
+            let content = `Cambridge Stage 4 Math Worksheet\n`;
+            content += `Student: ${userName}\n`;
+            content += `Topic: ${topic}\n`;
+            content += `Date: ${date}\n\n`;
+            
+            currentQuestions.forEach((question, index) => {
+                content += `${index + 1}. (${question.year}) ${question.question}\n`;
+                content += `Answer: ___________________________\n\n`;
+            });
+            
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Cambridge_Math_Worksheet_${userName.replace(/\s+/g, '_')}_${date.replace(/\//g, '-')}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Display scores in the scores tab
+        function displayScores() {
+            const scores = scoreTracker.getScores();
+            scoresContainer.innerHTML = '';
+            
+            if (scores.length === 0) {
+                scoresContainer.innerHTML = '<div class="no-scores">No scores recorded yet. Complete a worksheet to see your scores here.</div>';
+                return;
+            }
+            
+            scores.forEach(score => {
+                const scoreCard = document.createElement('div');
+                scoreCard.className = 'score-card';
+                
+                scoreCard.innerHTML = `
+                    <div class="score-header">
+                        <div class="score-topic">${score.userName} - ${score.topic === 'all' ? 'All Topics' : score.topic}</div>
+                        <div class="score-date">${score.date}</div>
+                    </div>
+                    <div class="score-details">
+                        <div class="score-value">${score.score}%</div>
+                        <div>${score.correctAnswers}/${score.totalQuestions} correct</div>
+                    </div>
+                `;
+                
+                scoresContainer.appendChild(scoreCard);
+            });
+        }
+
+        // Get motivational message based on score
+        function getScoreMessage(percentage) {
+            if (percentage >= 90) return "Excellent work! You've mastered these concepts!";
+            if (percentage >= 80) return "Great job! You have a strong understanding of these topics.";
+            if (percentage >= 70) return "Good work! You understand most of these concepts.";
+            if (percentage >= 60) return "Not bad! Review the incorrect answers to improve.";
+            return "Keep practicing! Review the material and try again.";
+        }
+
+        // Fisher-Yates shuffle algorithm
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Event listeners
+        generateBtn.addEventListener('click', generateWorksheet);
+        
+        printBtn.addEventListener('click', () => {
+            window.print();
+        });
+        
+        downloadBtn.addEventListener('click', downloadWorksheet);
+        
+        checkAnswersBtn.addEventListener('click', checkAnswers);
+        
+        viewScoresBtn.addEventListener('click', () => {
+            // Switch to scores tab
+            tabs.forEach(t => t.classList.remove('active'));
+            document.querySelector('.tab[data-tab="scores"]').classList.add('active');
+            
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+                if (content.id === 'scores-tab') {
+                    content.classList.add('active');
+                }
+            });
+            
+            displayScores();
+        });
+
+        // Initialize scores display
+        displayScores();
+    </script>
+</body>
+</html>
